@@ -22,27 +22,52 @@
     return self;
 }
 
+/*
+ To avoid problem of text value being too long for the label, we use solution from:
+ http://stackoverflow.com/questions/9342278/quickdialog-value-too-long-for-qlabelelement
+ 
+ Note that valueSize has been renamed labelSize.
+ */
 - (void)layoutSubviews {
+    
     [super layoutSubviews];
-    self.textLabel.backgroundColor = [UIColor clearColor];
-    self.detailTextLabel.backgroundColor = [UIColor clearColor];
-    CGSize valueSize = CGSizeZero;
-    if (self.detailTextLabel.text!=nil)
-        valueSize = [self.detailTextLabel.text sizeWithFont:self.detailTextLabel.font];
-
+    CGSize labelSize = CGSizeZero;
+    
+    if (self.textLabel.text!=nil)
+        labelSize = [self.textLabel.text sizeWithFont:self.textLabel.font];
+    
+    //  Uncomment this if label size is to be restricted to half of the cell width
+#if 0
+    if (labelSize.width > self.contentView.bounds.size.width/2) {
+        labelSize.width = self.contentView.bounds.size.width/2;
+    }    
+#endif
+    
     CGSize imageSize = CGSizeZero;
     if (self.imageView!=nil)
         imageSize = self.imageView.frame.size;
-
     
-    CGRect labelFrame = self.textLabel.frame;
-    self.textLabel.frame = CGRectMake(labelFrame.origin.x, labelFrame.origin.y,
-            self.contentView.bounds.size.width - valueSize.width - imageSize.width - 20, labelFrame.size.height);
-
+    if (self.detailTextLabel.text ==nil) {
+        CGRect labelFrame = self.textLabel.frame;
+        self.textLabel.frame = CGRectMake(labelFrame.origin.x, labelFrame.origin.y,
+                                          self.contentView.bounds.size.width - imageSize.width - 20, labelFrame.size.height);
+    }
+    else{
+        CGRect labelFrame = self.textLabel.frame;
+        self.textLabel.frame = CGRectMake(labelFrame.origin.x, labelFrame.origin.y,
+                                          labelSize.width, labelFrame.size.height);
+        
+    }
+    
+    
+    
+    
     CGRect detailsFrame = self.detailTextLabel.frame;
-    self.detailTextLabel.frame = CGRectMake(
-            self.contentView.bounds.size.width - valueSize.width - 10,
-            detailsFrame.origin.y, valueSize.width, detailsFrame.size.height);
+    self.detailTextLabel.frame = CGRectMake(self.textLabel.frame.origin.x + labelSize.width,
+                                            detailsFrame.origin.y, self.contentView.bounds.size.width - labelSize.width - 
+                                            imageSize.width - 20, detailsFrame.size.height);
+    
 }
+
 
 @end
