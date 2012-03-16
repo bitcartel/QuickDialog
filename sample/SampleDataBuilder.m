@@ -55,6 +55,7 @@
     [subForm addSection:subsection];
 	
 	[subsection addElement:[[QLabelElement alloc] initWithKey:@"Key1"]];
+    [subsection addElement:[[QMultilineElement alloc] initWithKey:@"Key3"]];
 	[subsection	addElement:[[QBadgeElement alloc] initWithKey:@"Key1"]];
 	[subsection	addElement:[[QBooleanElement alloc] initWithKey:@"Key1"]];
 	[subsection	addElement:[[QButtonElement alloc] initWithKey:@"Key1"]];
@@ -183,7 +184,7 @@
     
     QDecimalElement *decimal = [[QDecimalElement alloc] initWithTitle:@"Decimal Element" value:0.5];
     decimal.key = @"decimal1";
-    decimal.fractionDigits = 3;
+    decimal.fractionDigits = 2;
     [controls addElement:decimal];
 
     QLabelElement *element2 = [[QLabelElement alloc] initWithTitle:@"Label Different Height" Value:@"70"];
@@ -196,13 +197,14 @@
 	QButtonElement *button = [[QButtonElement alloc] initWithTitle:@"Show form values"];
 	button.onSelected = ^{
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Hello"
-            message:[NSString stringWithFormat:@"1: %d\n2: %@\n3: %d\n4:%@\n5:%f\n6:%f",
+            message:[NSString stringWithFormat:@"1: %d\n2: %@\n3: %d\n4:%@\n5:%f\n6:%f\n7:%@",
                 radioElement.selected ,
                 entryElement.textValue,
                 boolElement.boolValue,
                 dateElement.dateValue ,
                 slider.floatValue,
-                decimal.floatValue]
+                decimal.floatValue,
+                                    autoElement.textValue]
            delegate:self 
            cancelButtonTitle:@"OK" 
            otherButtonTitles:nil];
@@ -376,7 +378,7 @@
     QEntryElement *secureElement = [[QEntryElement alloc] initWithTitle:@"Secure" Value:@"" Placeholder:@"YES"];
     secureElement.secureTextEntry = YES;
     [traitsSection addElement:secureElement];
-    
+
     QEntryElement *keyboardTypeElement = [[QEntryElement alloc] initWithTitle:@"KB Type" Value:@"" Placeholder:@"NumberPad"];
     keyboardTypeElement.keyboardType = UIKeyboardTypeNumberPad;
     [traitsSection addElement:keyboardTypeElement];
@@ -400,8 +402,17 @@
     QEntryElement *enableReturnElement = [[QEntryElement alloc] initWithTitle:@"Auto Return" Value:@"" Placeholder:@"YES"];
     enableReturnElement.enablesReturnKeyAutomatically = YES;
     [traitsSection addElement:enableReturnElement];
-    
+
+    QSection *multilineSection = [[QSection alloc] initWithTitle:@"Entry Elements"];
+
+
+    QMultilineElement *multiline = [QMultilineElement new];
+    multiline.title = @"Multiline entry";
+    [multilineSection addElement:multiline];
+
+
     [root addSection:traitsSection];
+    [root addSection:multilineSection];
     
     return root;
 }
